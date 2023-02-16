@@ -7,11 +7,11 @@ const { GraphQLFileLoader } = require('@graphql-tools/graphql-file-loader');
 const DB = require('./db');
 
 // Construct a schema, using GraphQL schema language
-var schema = buildSchema(`
-  type Query {
-    hello(name: String): String
-  }
-`);
+// var schema = buildSchema(`
+//   type Query {
+//     hello(name: String): String
+//   }
+// `);
 
 const fileSchema = loadSchemaSync('schema.graphql', {
   loaders: [new GraphQLFileLoader()],
