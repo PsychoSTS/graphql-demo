@@ -31,6 +31,9 @@ var root = {
   async reportsTo({ manager }) {
     return await DB.getEmployeesReportsTo(manager);
   },
+  async createEmployee({ firstName, lastName }) {
+    return await DB.createEmployee(firstName, lastName);
+  },
 };
 
 var app = express();

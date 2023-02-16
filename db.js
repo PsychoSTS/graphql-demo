@@ -37,9 +37,23 @@ function getEmployeesReportsTo(manager) {
   });
 }
 
+function createEmployee(firstName, lastName) {
+  return new Promise((res, rej) => {
+    db.run(
+      `INSERT INTO employees(FirstName, LastName) VALUES ("${firstName}", "${lastName}")`,
+      (error, rows) => {
+        if (rows) {
+          res(rows);
+        }
+      }
+    );
+  });
+}
+
 module.exports = {
   db,
   getAllEmployees,
   getEmployeeByName,
   getEmployeesReportsTo,
+  createEmployee,
 };
