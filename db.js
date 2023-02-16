@@ -56,6 +56,7 @@ function deleteEmployee(firstName) {
       `DELETE FROM employees WHERE FirstName = "${firstName}"`,
       (error, rows) => {
         if (rows) {
+          console.log(rows);
           res(rows);
         }
       }
