@@ -1,62 +1,67 @@
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database(':memory:');
+const db = new sqlite3.Database('./chinook.db');
 
-db.run(
-  `
-  CREATE TABLE contacts (
-    [contact_id] INTEGER PRIMARY KEY AUTOINCREMENT,
-    [first_name] TEXT NOT NULL,
-    [last_name] TEXT NOT NULL,
-    [email] TEXT NOT NULL UNIQUE,
-    [phone] TEXT NOT NULL UNIQUE
-  );
-`,
-  () => {
-    db.run(
-      `
-    INSERT INTO contacts(first_name, last_name, email, phone)
-    VALUES
-      ('Roelof", 'Jooste", 'roelof.jooste@takealot.com', TRUE)
-      ('Marius", 'Vorster', 'marius.vorster@takealot.com', FALSE)
-      ('Todd", 'Atterbury', 'todd.atterbury@takealot.com', TRUE);
-  `,
-      () => {
-        db.all('SELECT * FROM contacts', (err, row) => {
-          console.log(row);
-          db.close();
-        });
-      }
-    );
+//Retrieving All Rows
+db.all('SELECT EmployeeId, FirstName FROM employees', (error, rows) => {
+  rows.forEach((row) => {
+    console.log(row.EmployeeId + ' ' + row.FirstName);
+  });
+});
+
+//Retrieving A Single Row
+db.get('SELECT EmployeeId, FirstName FROM employees', (error, row) => {
+  console.log(row.EmployeeId + ' ' + row.FirstName);
+});
+
+//Retrieving Data Based on Placeholder
+db.all(
+  'SELECT EmployeeId, FirstName FROM employees where title=$title',
+  {
+    $title: 'Sales Support Agent',
+  },
+  (error, rows) => {
+    rows.forEach((row) => {
+      console.log(row.EmployeeId + ' ' + row.FirstName);
+    });
   }
 );
 
-// db.serialize(() => {
-//   db.run(
-//     `
-//     CREATE TABLE contacts (
-//       contact_id INTEGER PRIMARY KEY AUTOINCREMENT,
-//       first_name TEXT NOT NULL,
-//       last_name TEXT NOT NULL,
-//       email TEXT NOT NULL UNIQUE,
-//       phone TEXT NOT NULL UNIQUE
-//     );
-//   `
-//   );
+//Executing run() Method
+db.run(`INSERT INTO playlists(Name) VALUES(?)`, ['Rock'], function (error) {
+  console.log('New playlist added with id ' + this.lastID);
+});
 
-//   db.run(
-//     `
-//     INSERT INTO contacts(first_name, last_name, email, phone)
-//     VALUES
-//       ("Roelof", "Jooste", "roelof.jooste@takealot.com", TRUE)
-//       ("Marius", "Vorster", "marius.vorster@takealot.com", FALSE)
-//       ("Todd", "Atterbury", "todd.atterbury@takealot.com", TRUE);
-//   `
-//   );
+//Using SQLite each() Method Instead of forEach()
+db.each(
+  'SELECT EmployeeId, FirstName FROM employees limit 10',
+  (error, row) => {
+    console.log(row.EmployeeId + ' ' + row.FirstName);
+  }
+);
 
-//   db.each('SELECT * FROM contacts', (err, row) => {
-//     console.log(row);
-//   });
-// });
+//Running Queries Synchronously
+//without serialize method
+db.run('DROP TABLE playlists', function (error) {
+  db.run(
+    'CREATE TABLE playlists([PlaylistId] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,[Name] NVARCHAR(120))',
+    function (error) {
+      db.run(
+        "INSERT INTO playlists (name) VALUES  ('Music'), ('Movies'), ('TV Shows')"
+      );
+    }
+  );
+});
+
+//with serialize method
+db.serialize(() => {
+  db.run('DROP TABLE playlists');
+  db.run(
+    'CREATE TABLE playlists([PlaylistId] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,[Name] NVARCHAR(120))'
+  );
+  db.run(
+    "INSERT INTO playlists (name) VALUES  ('Music'), ('Movies'), ('TV Shows')"
+  );
+});
 
 module.exports = {
   db,
