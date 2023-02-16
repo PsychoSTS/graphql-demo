@@ -50,10 +50,24 @@ function createEmployee(firstName, lastName) {
   });
 }
 
+function deleteEmployee(firstName) {
+  return new Promise((res, rej) => {
+    db.run(
+      `DELETE FROM employees WHERE FirstName = "${firstName}"`,
+      (error, rows) => {
+        if (rows) {
+          res(rows);
+        }
+      }
+    );
+  });
+}
+
 module.exports = {
   db,
   getAllEmployees,
   getEmployeeByName,
   getEmployeesReportsTo,
   createEmployee,
+  deleteEmployee,
 };

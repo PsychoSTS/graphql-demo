@@ -18,6 +18,7 @@ type Employee {
 
 type Mutation {
   createEmployee(firstName: String, lastName: String): Employee
+  deleteEmployee(firstName: String): Employee
 }
 
 type Query {

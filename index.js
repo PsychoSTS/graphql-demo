@@ -34,6 +34,9 @@ var root = {
   async createEmployee({ firstName, lastName }) {
     return await DB.createEmployee(firstName, lastName);
   },
+  async deleteEmployee({ firstName }) {
+    return await DB.deleteEmployee(firstName);
+  },
 };
 
 var app = express();
