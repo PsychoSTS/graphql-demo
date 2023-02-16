@@ -19,9 +19,6 @@ const fileSchema = loadSchemaSync('schema.graphql', {
 
 // The root provides a resolver function for each API endpoint
 var root = {
-  hello: ({ name = 'world' }) => {
-    return `Hello, ${name}!`;
-  },
   async employees() {
     return await DB.getAllEmployees();
   },

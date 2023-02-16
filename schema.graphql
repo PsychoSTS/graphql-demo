@@ -16,13 +16,13 @@ type Employee {
   Email: String
 }
 
-type Mutation {
-  createEmployee(firstName: String, lastName: String): Employee
-  deleteEmployee(firstName: String): Employee
-}
-
 type Query {
   employees: [Employee]
   employee(name: String): Employee
   reportsTo(manager: Int): [Employee]
+}
+
+type Mutation {
+  createEmployee(firstName: String, lastName: String): Employee
+  deleteEmployee(firstName: String): Employee
 }
