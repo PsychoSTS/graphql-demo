@@ -1,3 +1,23 @@
+type Employee {
+  EmployeeId: Int
+  LastName: String
+  FirstName: String
+  Title: String
+  ReportsTo: Int
+  BirthDate: String
+  HireDate: String
+  Address: String
+  City: String
+  State: String
+  Country: String
+  PostalCode: String
+  Phone: String
+  Fax: String
+  Email: String
+}
+
 type Query {
-  hello(name: String): String
+  employees: [Employee]
+  employee(name: String): Employee
+  reportsTo(manager: Int): [Employee]
 }

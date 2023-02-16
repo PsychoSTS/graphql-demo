@@ -4,7 +4,7 @@ const { buildSchema } = require('graphql');
 const { loadSchemaSync } = require('@graphql-tools/load');
 const { GraphQLFileLoader } = require('@graphql-tools/graphql-file-loader');
 
-const { db } = require('./db');
+const DB = require('./db');
 
 // Construct a schema, using GraphQL schema language
 var schema = buildSchema(`
@@ -22,13 +22,22 @@ var root = {
   hello: ({ name = 'world' }) => {
     return `Hello, ${name}!`;
   },
+  async employees() {
+    return await DB.getAllEmployees();
+  },
+  async employee({ name }) {
+    return await DB.getEmployeeByName(name);
+  },
+  async reportsTo({ manager }) {
+    return await DB.getEmployeesReportsTo(manager);
+  },
 };
 
 var app = express();
 app.use(
   '/',
   graphqlHTTP({
-    schema: schema,
+    schema: fileSchema,
     rootValue: root,
     graphiql: true,
   })
