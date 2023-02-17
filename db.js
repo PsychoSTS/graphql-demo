@@ -41,10 +41,10 @@ function createEmployee(firstName, lastName) {
   return new Promise((res, rej) => {
     db.run(
       `INSERT INTO employees(FirstName, LastName) VALUES ("${firstName}", "${lastName}")`,
-      (error, rows) => {
-        if (rows) {
-          res(rows);
-        }
+      () => {
+        getEmployeeByName(firstName).then((employee) => {
+          res(employee);
+        });
       }
     );
   });
@@ -52,15 +52,11 @@ function createEmployee(firstName, lastName) {
 
 function deleteEmployee(firstName) {
   return new Promise((res, rej) => {
-    db.run(
-      `DELETE FROM employees WHERE FirstName = "${firstName}"`,
-      (error, rows) => {
-        if (rows) {
-          console.log(rows);
-          res(rows);
-        }
-      }
-    );
+    getEmployeeByName(firstName).then((employee) => {
+      db.run(`DELETE FROM employees WHERE FirstName = "${firstName}"`, () => {
+        res(employee);
+      });
+    });
   });
 }
 
